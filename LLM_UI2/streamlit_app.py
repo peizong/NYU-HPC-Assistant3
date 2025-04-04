@@ -1,8 +1,6 @@
 import streamlit as st
 import os
 from core.faisembedder import FaissEmbedder
-from openai import OpenAI
-from portkey_ai import createHeaders
 
 # Configuration Variables
 MODEL_NAME = "gpt-4o"  # OpenAI model to use
@@ -17,29 +15,17 @@ RESOURCES_FOLDER = "resources"
 RAG_DATA_FILE = "rag_prepared_data_nyu_hpc.csv"
 FAISS_INDEX_FILE = "faiss_index.pkl"
 
-def create_custom_openai_client():
-    """Create a custom OpenAI client that points to NYU's API server"""
-    return OpenAI(
-        api_key="xxx",  # Since we are using a virtual key we do not need this
-        base_url="https://ai-gateway.apps.cloud.rt.nyu.edu/v1",
-        default_headers=createHeaders(
-            api_key="8gTMTBfxZ9zzXHp/ZTcbUhPo9+81",
-            virtual_key="openai-nyu-it-d-5b382a"
-        )
-    )
-
 def initialize_embedder():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     resources_dir = os.path.join(script_dir, RESOURCES_FOLDER)
     rag_output = os.path.join(resources_dir, RAG_DATA_FILE)
     faiss_index_file = os.path.join(resources_dir, FAISS_INDEX_FILE)
-
-    custom_openai_client = create_custom_openai_client() # Create the custom client
-    return FaissEmbedder(rag_output, index_file=faiss_index_file, openai_client=custom_openai_client) # Pass it to FaissEmbedder
+    
+    return FaissEmbedder(rag_output, index_file=faiss_index_file)
 
 def main():
     st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
-
+    
     st.title(PAGE_TITLE)
     st.markdown(WELCOME_MESSAGE)
 
@@ -50,10 +36,9 @@ def main():
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
-
+        
     if "embedder" not in st.session_state:
         st.session_state.embedder = initialize_embedder()
-
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -68,20 +53,20 @@ def main():
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             full_response = ""
-
+            
             results = st.session_state.embedder.search(prompt, k=RESULTS_COUNT)
             context = "\n".join([result['metadata']['chunk'] for result in results])
-
+            
             chat_history = ""
             if len(st.session_state.messages) > 0:
                 recent_messages = st.session_state.messages[-MAX_CHAT_HISTORY:]
                 chat_history = "\nRecent conversation:\n" + "\n".join([
-                    f"{msg['role']}: {msg['content']}"
+                    f"{msg['role']}: {msg['content']}" 
                     for msg in recent_messages
                 ])
-
+            
             messages = [
-                {"role": "system", "content": """You are a helpful assistant specializing in NYU's High Performance Computing.
+                {"role": "system", "content": """You are a helpful assistant specializing in NYU's High Performance Computing. 
 First evaluate if the provided context contains relevant information for the question:
 - If the context is relevant, prioritize this NYU-specific information in your response.
 - If the context is irrelevant or only tangentially related, rely on your general knowledge instead.
@@ -91,21 +76,27 @@ Supplement your responses with general knowledge about HPC concepts, best practi
 Always ensure your responses are accurate and aligned with NYU's HPC environment."""},
                 {"role": "user", "content": f"Context: {context}\n{chat_history}\n\nQuestion: {prompt}"}
             ]
-
-            # Stream the response using the embedder's openai_client
+            
+            # Stream the response
             stream = st.session_state.embedder.openai_client.chat.completions.create(
                 model=MODEL_NAME,
                 messages=messages,
-                stream=True,
+                #stream=True, #this is part of the original code
             )
 
+            # The next four lines are from Danyal's original version
+            #  for chunk in stream:
+            #     if chunk.choices[0].delta.content is not None:
+            #         full_response += chunk.choices[0].delta.content
+            #         message_placeholder.markdown(full_response + "▌")
+            #if len(list(stream))==1: 
+            stream=[stream]
             for chunk in stream:
-                if chunk.choices[0].delta.content is not None:
-                    full_response += chunk.choices[0].delta.content
+                if chunk.choices[0].message.content is not None:
+                    full_response += chunk.choices[0].message.content
                     message_placeholder.markdown(full_response + "▌")
-
             message_placeholder.markdown(full_response)
-
+        
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 if __name__ == "__main__":
