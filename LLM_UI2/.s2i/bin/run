@@ -1,4 +1,6 @@
 APP_PORT=${APP_PORT:-"8080"}
-python -m streamlit run --server.port ${APP_PORT} test_app.py #streamlit_app_cloud.py
+python -m streamlit run --server.port ${APP_PORT} test_app.py 
 
-#streamlit run --server.port ${APP_PORT} streamlit_app_cloud.py
+##streamlit_app_cloud.py
+
+##streamlit run --server.port ${APP_PORT} streamlit_app_cloud.py
