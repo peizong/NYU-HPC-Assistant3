@@ -3,7 +3,7 @@ import logging
 import requests
 from xml.etree import ElementTree
 import streamlit as st
-from core.faisembedder import FaissEmbedder
+#from core.faisembedder import FaissEmbedder
 import json
 import pandas as pd
 import faiss
