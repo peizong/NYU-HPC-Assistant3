@@ -69,14 +69,17 @@ class FaissEmbedder:
         #                                   )
         # )
         
+        # self.openai_client = OpenAI(
+        #     api_key="xxx", #"OPENAI_API_KEY", # defaults to os.environ.get("OPENAI_API_KEY")
+        #     base_url="https://ai-gateway.apps.cloud.rt.nyu.edu/v1", #PORTKEY_GATEWAY_URL,
+        #     default_headers=createHeaders(
+        #     #provider="openai",
+        #     api_key= "8gTMTBfxZ9zzXHp/ZTcbUhPo9+81", #os.environ.get("PORTKEY_API_KEY"), #"PORTKEY_API_KEY", # defaults to os.environ.get("PORTKEY_API_KEY"),
+        #     virtual_key= "openai-nyu-it-d-5b382a" #os.environ.get("VIRTUAL_KEY_VALUE") #if you want provider key on gateway instead of client
+        #                                   )
+        # )
         self.openai_client = OpenAI(
-            api_key="xxx", #"OPENAI_API_KEY", # defaults to os.environ.get("OPENAI_API_KEY")
-            base_url="https://ai-gateway.apps.cloud.rt.nyu.edu/v1", #PORTKEY_GATEWAY_URL,
-            default_headers=createHeaders(
-            #provider="openai",
-            api_key= "8gTMTBfxZ9zzXHp/ZTcbUhPo9+81", #os.environ.get("PORTKEY_API_KEY"), #"PORTKEY_API_KEY", # defaults to os.environ.get("PORTKEY_API_KEY"),
-            virtual_key= "openai-nyu-it-d-5b382a" #os.environ.get("VIRTUAL_KEY_VALUE") #if you want provider key on gateway instead of client
-                                          )
+             api_key="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"
         )
         # #changed by Pei#######################
         
