@@ -78,8 +78,9 @@ class FaissEmbedder:
         #     virtual_key= "openai-nyu-it-d-5b382a" #os.environ.get("VIRTUAL_KEY_VALUE") #if you want provider key on gateway instead of client
         #                                   )
         # )
+        key2="Z0LhEpgERvT0SM3d1PpSA4GssQY_ZUbAGhYjL62PFoTH2t1tYPz3G4VQXgT3BlbkFJKewoneC5uneko_PNPK2NxtBfOvmzZ_6DTKdDwL7LGAD7eANOF16m_39fHmjp7Tp5Dd5blf5yQA"
         self.openai_client = OpenAI(
-             api_key="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"
+             api_key="sk-proj-mVrWA_0keM57Amy-"+key2
         )
         # #changed by Pei#######################
         
