@@ -7,6 +7,7 @@ trafilatura
 torch
 sentence-transformers
 faiss-cpu==1.7.4
+--force-reinstall
 openai
 urllib3
 numpy>=1.21
