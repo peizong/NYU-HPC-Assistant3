@@ -252,23 +252,23 @@ Always ensure your responses are accurate and aligned with NYU's HPC environment
             stream = st.session_state.embedder.openai_client.chat.completions.create(
                 model=MODEL_NAME,
                 messages=messages,
-                stream=True, #changed by pei
+                #stream=True, #changed by pei
             )
             
             #Danyl's original code
-            for chunk in stream:
-                if chunk.choices[0].delta.content is not None:
-                    full_response += chunk.choices[0].delta.content
-                    message_placeholder.markdown(full_response + "▌")
-            
-            message_placeholder.markdown(full_response)
-
-            #stream=[stream]
             # for chunk in stream:
-            #     if chunk.choices[0].message.content is not None:
-            #         full_response += chunk.choices[0].message.content
+            #     if chunk.choices[0].delta.content is not None:
+            #         full_response += chunk.choices[0].delta.content
             #         message_placeholder.markdown(full_response + "▌")
+            
             # message_placeholder.markdown(full_response)
+
+            stream=[stream]
+            for chunk in stream:
+                if chunk.choices[0].message.content is not None:
+                    full_response += chunk.choices[0].message.content
+                    message_placeholder.markdown(full_response + "▌")
+            message_placeholder.markdown(full_response)
         
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
