@@ -9,7 +9,7 @@ sentence-transformers
 faiss-cpu==1.7.4
 openai
 urllib3
-numpy==2.0
+numpy==1.26
 einops
 streamlit
 portkey-ai
